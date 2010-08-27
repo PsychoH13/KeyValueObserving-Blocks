@@ -70,12 +70,10 @@ int main (int argc, const char * argv[]) {
     [psy setLastName:@"Dupont"];
     
     [psy removeBlockObserver:psyFirstNameObs];
-    [psyFirstNameObs release];
     
     [myFamily setFather:nil];
     
     [myFamily removeBlockObserver:myFamFatherLastNameObs];
-    [myFamFatherLastNameObs release];
     
     [psy release];
     [myFamily release];
