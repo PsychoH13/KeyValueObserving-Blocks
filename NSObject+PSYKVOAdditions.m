@@ -26,26 +26,26 @@
 #import "NSObject+PSYKVOAdditions.h"
 
 // Convenience type, used internally
-typedef void (^_PSYKVOHandler)(NSString *keyPath, id object, NSDictionary *change, void *context);
+typedef void (^_PSYKVOHandler)(NSString *keyPath, id object, NSDictionary *change);
 
 // Private class that will do the actual observation and allow its removal
 @interface _PSYKVOBlockHelper : NSObject
 {
-    _PSYKVOHandler   handler;          // The observing block
-    NSString         *observedKeyPath; // The observed keyPath, useful when removing the handler
-    __weak id        observed;         // A weak reference to the observer object to avoid hanging references
+    _PSYKVOHandler           handler;          // The observing block
+    NSString                *observedKeyPath; // The observed keyPath, useful when removing the handler
+    __weak id                observed;         // A weak reference to the observer object to avoid hanging references
     __weak NSOperationQueue *queue;           
 }
-@property (copy)   _PSYKVOHandler  handler;
-@property (assign) __weak id       observed;
-@property (copy)   NSString       *observedKeyPath;
-@property (assign) __weak NSOperationQueue *queue;
+@property(copy)   _PSYKVOHandler           handler;
+@property(assign) __weak id                observed;
+@property(copy)   NSString                *observedKeyPath;
+@property(assign) __weak NSOperationQueue *queue;
 @end
 
 
 @implementation NSObject (PSYKVOAdditions)
 
-- (id)addBlockObserverForKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))block 
+- (id)addBlockObserverForKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change))block 
 {
     // Creates and initialize the helper for observing 
     _PSYKVOBlockHelper *helper = [[[_PSYKVOBlockHelper alloc] init] autorelease]; 
@@ -55,7 +55,7 @@ typedef void (^_PSYKVOHandler)(NSString *keyPath, id object, NSDictionary *chang
     [helper setQueue:queue];
     
     // Add the actual observer, this allow the exact same behavior as the normal technique
-    [self addObserver:helper forKeyPath:keyPath options:options context:context];
+    [self addObserver:helper forKeyPath:keyPath options:options context:NULL];
     
     return helper;
 }
@@ -74,12 +74,10 @@ typedef void (^_PSYKVOHandler)(NSString *keyPath, id object, NSDictionary *chang
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-  if (queue == nil) {
-    handler(keyPath, object, change, context);
-  }
-  else {
-    [queue addOperation:[NSBlockOperation blockOperationWithBlock:^{ handler(keyPath, object, change, context); }]];
-  }
+    if (queue == nil)
+        handler(keyPath, object, change);
+    else
+        [queue addOperation:[NSBlockOperation blockOperationWithBlock:^{ handler(keyPath, object, change); }]];
 }
 
 - (void)dealloc

@@ -42,12 +42,10 @@
  *   The source object of the key path keyPath.
  * change
  *   A dictionary that describes the changes that have been made to the value of the property at the key path keyPath relative to object. Entries are described in ¡§Keys used by the change dictionary.¡¨
- * context
- *   The value that was provided when the receiver was registered to receive key-value observation notifications.
  @result An object to act as the observer ¡V of unspecified type, though it will respond to methods in the NSObject protocol ¡V is created for you and returned.
  * You must retain the returned value as long as long as you want the registration to exist in the notification center.
  */
-- (id)addBlockObserverForKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))block;
+- (id)addBlockObserverForKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options queue:(NSOperationQueue *)queue usingBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change))block;
 
 /*
  @abstract Removes a block observer previously added with addBlockObserverForKeyPath:options:handler:.

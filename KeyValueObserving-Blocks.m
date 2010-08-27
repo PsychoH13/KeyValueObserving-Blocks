@@ -46,21 +46,21 @@
 int main (int argc, const char * argv[]) {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     
-    void (^blk)(NSString *keyPath, id object, NSDictionary *change, void *context) =
-    ^(NSString *keyPath, id object, NSDictionary *change, void *context)
+    void (^blk)(NSString *keyPath, id object, NSDictionary *change) =
+    ^(NSString *keyPath, id object, NSDictionary *change)
     {
         NSLog(@"%@ %@ %@", keyPath, object, change);
     };
     
     Person *psy = [[Person alloc] init];
     
-    id psyFirstNameObs = [[psy addBlockObserverForKeyPath:@"firstName" options:0xF context:NULL queue:nil usingBlock:blk] retain];
+    id psyFirstNameObs = [[psy addBlockObserverForKeyPath:@"firstName" options:0xF queue:nil usingBlock:blk] retain];
     
     [psy setFirstName:@"Remy"];
     
     Family *myFamily = [[Family alloc] init];
     
-    id myFamFatherLastNameObs = [[myFamily addBlockObserverForKeyPath:@"father.lastName" options:0xF context:NULL queue:nil usingBlock:blk] retain];
+    id myFamFatherLastNameObs = [[myFamily addBlockObserverForKeyPath:@"father.lastName" options:0xF queue:nil usingBlock:blk] retain];
     
     [myFamily setFather:psy];
     
