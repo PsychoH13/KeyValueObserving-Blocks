@@ -54,13 +54,13 @@ int main (int argc, const char * argv[]) {
     
     Person *psy = [[Person alloc] init];
     
-    id psyFirstNameObs = [[psy addBlockObserverForKeyPath:@"firstName" options:0xF queue:nil usingBlock:blk] retain];
+    id psyFirstNameObs = [psy addBlockObserverForKeyPath:@"firstName" options:0xF queue:nil usingBlock:blk];
     
     [psy setFirstName:@"Remy"];
     
     Family *myFamily = [[Family alloc] init];
     
-    id myFamFatherLastNameObs = [[myFamily addBlockObserverForKeyPath:@"father.lastName" options:0xF queue:nil usingBlock:blk] retain];
+    id myFamFatherLastNameObs = [myFamily addBlockObserverForKeyPath:@"father.lastName" options:0xF queue:nil usingBlock:blk];
     
     [myFamily setFather:psy];
     
